@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nijam Paaku – Daily Life Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div id="storage-warning" class="storage-warning hidden" role="alert">
+    ⚠️ Storage unavailable – your data will not be saved this session.
+  </div>
+
+  <header class="app-header">
+    <h1 class="app-title">Nijam Paaku</h1>
+    <button id="dark-mode-toggle" class="btn btn-icon" aria-label="Toggle dark mode">🌙</button>
+  </header>
+
+  <main class="app-main">
+
+    <div class="dashboard-main card">
+      <div class="section-header">
+        <h2>Dashboard</h2>
+        <p class="section-sub">Your daily overview</p>
+      </div>
+      <div id="dashboard" class="dashboard-grid"></div>
+    </div>
+
+    <div class="section-group">
+
+      <section id="tasks" class="section card">
+        <h2>Tasks</h2>
+        <form class="task-form">
+          <input class="task-input" type="text" placeholder="Add a new task…" autocomplete="off" />
+          <button type="submit">Add</button>
+          <p class="task-error"></p>
+        </form>
+      </section>
+
+      <section id="water" class="section card"><h2>Water Intake</h2></section>
+      <section id="calories" class="section card"><h2>Calorie Tracker</h2></section>
+      <section id="sleep" class="section card"><h2>Sleep Tracker</h2></section>
+      <section id="screenTime" class="section card"><h2>Screen Time</h2></section>
+      <section id="mood" class="section card"><h2>Mood</h2></section>
+      <section id="habits" class="section card"><h2>Habits</h2></section>
+      <section id="timeline" class="section card"><h2>Activity Timeline</h2></section>
+      <section id="journal" class="section card"><h2>Daily Journal</h2></section>
+
+      <section id="analytics" class="section card">
+        <h2>Weekly Analytics</h2>
+        <div class="charts-grid">
+          <div class="chart-tasks"></div>
+          <div class="chart-water"></div>
+          <div class="chart-sleep"></div>
+        </div>
+        <div class="analytics-streaks"></div>
+      </section>
+
+      <section id="achievements" class="section card"><h2>Achievements</h2></section>
+      <section id="reminders" class="section card"><h2>Reminders</h2></section>
+
+    </div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
