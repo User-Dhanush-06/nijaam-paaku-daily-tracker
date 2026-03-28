@@ -2,13 +2,8 @@ import { emit } from './eventBus.js';
 
 const PREFIX = 'np_';
 
-/** Whether localStorage is available and functional. */
 export let storageAvailable = isAvailable();
 
-/**
- * Check if localStorage is available.
- * @returns {boolean}
- */
 export function isAvailable() {
   try {
     const testKey = PREFIX + '__test__';
@@ -20,12 +15,6 @@ export function isAvailable() {
   }
 }
 
-/**
- * Read a value from localStorage.
- * @param {string} key  - without prefix
- * @param {*} fallback  - returned when key is missing or on error
- * @returns {*}
- */
 export function get(key, fallback = null) {
   try {
     const raw = localStorage.getItem(PREFIX + key);
@@ -37,11 +26,6 @@ export function get(key, fallback = null) {
   }
 }
 
-/**
- * Write a value to localStorage.
- * @param {string} key  - without prefix
- * @param {*} value     - will be JSON-serialised
- */
 export function set(key, value) {
   try {
     localStorage.setItem(PREFIX + key, JSON.stringify(value));
@@ -51,10 +35,6 @@ export function set(key, value) {
   }
 }
 
-/**
- * Remove a key from localStorage.
- * @param {string} key  - without prefix
- */
 export function remove(key) {
   try {
     localStorage.removeItem(PREFIX + key);
@@ -63,10 +43,33 @@ export function remove(key) {
   }
 }
 
+/** Remove every key in localStorage that belongs to this app. */
+export function clearAll() {
+  const keys = Object.keys(localStorage).filter(k => k.startsWith(PREFIX));
+  keys.forEach(k => localStorage.removeItem(k));
+}
+
+/**
+ * Show a brief toast notification.
+ * @param {string} message
+ * @param {'success'|'error'|'info'} type
+ */
+export function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `np-toast np-toast-${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => toast.classList.add('np-toast-show'));
+  });
+  setTimeout(() => {
+    toast.classList.remove('np-toast-show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+}
+
 function _handleError(err) {
-  try {
-    emit('storage:error', err);
-  } catch {
-    // eventBus itself may not be available in all test environments
-  }
+  try { emit('storage:error', err); } catch { /* silent in test environments */ }
 }

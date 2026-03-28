@@ -1,71 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Nijam Paaku – Daily Life Tracker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:#000814;
+      background-image:
+        radial-gradient(ellipse 90% 70% at 10% -5%,  #1e0a5a 0%,transparent 55%),
+        radial-gradient(ellipse 70% 60% at 90% 15%,  #0a2050 0%,transparent 50%),
+        radial-gradient(ellipse 60% 50% at 50% 110%, #1a082a 0%,transparent 55%),
+        radial-gradient(ellipse 40% 35% at 15% 70%,  #001a10 0%,transparent 50%);
+      color:#f0f0ff;min-height:100vh;overflow-x:hidden;
+    }
+
+    /* Animated orbs */
+    .orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.3;pointer-events:none;animation:drift 12s ease-in-out infinite alternate;}
+    .orb1{width:600px;height:600px;background:radial-gradient(circle,#6d28d9,transparent);top:-200px;left:-150px;animation-delay:0s;}
+    .orb2{width:500px;height:500px;background:radial-gradient(circle,#0284c7,transparent);top:-100px;right:-150px;animation-delay:2s;}
+    .orb3{width:400px;height:400px;background:radial-gradient(circle,#db2777,transparent);bottom:-100px;left:40%;animation-delay:4s;}
+    @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(30px,20px) scale(1.08);}}
+
+    /* Nav */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 48px;
+      background:rgba(0,8,20,0.5);
+      backdrop-filter:blur(30px) saturate(180%);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo{
+      font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:.04em;
+      background:linear-gradient(135deg,#c4b5fd,#7dd3fc,#f9a8d4);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .nav-btn{
+      padding:9px 22px;border-radius:99px;font-size:13px;font-weight:500;cursor:pointer;
+      background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+      color:#f0f0ff;text-decoration:none;
+      transition:background .2s,transform .2s;display:inline-block;
+    }
+    .nav-btn:hover{background:rgba(255,255,255,0.14);transform:translateY(-1px);}
+
+    /* Hero */
+    .hero{
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      text-align:center;padding:120px 24px 80px;
+      position:relative;z-index:1;
+    }
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 16px;border-radius:99px;font-size:12px;font-weight:500;
+      background:rgba(109,40,217,0.2);border:1px solid rgba(139,92,246,0.35);
+      color:#c4b5fd;margin-bottom:28px;letter-spacing:.04em;text-transform:uppercase;
+    }
+    .hero h1{
+      font-family:'Syne',sans-serif;font-size:clamp(42px,8vw,80px);font-weight:800;
+      line-height:1.05;letter-spacing:-.02em;margin-bottom:20px;
+      background:linear-gradient(135deg,#e2d9ff 0%,#a5f3fc 40%,#fce7f3 80%,#ddd6fe 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .hero-sub{
+      font-size:clamp(16px,2.5vw,20px);color:rgba(255,255,255,0.5);
+      max-width:520px;line-height:1.7;margin-bottom:44px;font-weight:300;
+    }
+    .cta-group{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+    .cta-primary{
+      padding:15px 36px;border-radius:99px;font-size:15px;font-weight:500;cursor:pointer;
+      background:linear-gradient(135deg,#7c3aed,#0ea5e9);
+      border:none;color:#fff;
+      box-shadow:0 4px 30px rgba(124,58,237,0.45);
+      transition:transform .2s,box-shadow .2s;display:inline-block;text-decoration:none;
+      position:relative;overflow:hidden;
+    }
+    .cta-primary::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+      border-radius:99px;
+    }
+    .cta-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(124,58,237,0.6);}
+    .cta-secondary{
+      padding:15px 36px;border-radius:99px;font-size:15px;font-weight:500;cursor:pointer;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+      color:#f0f0ff;transition:background .2s,transform .2s;display:inline-block;text-decoration:none;
+    }
+    .cta-secondary:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px);}
+
+    /* Preview cards floating */
+    .preview-float{
+      display:flex;gap:16px;margin-top:60px;flex-wrap:wrap;justify-content:center;
+      perspective:1000px;
+    }
+    .preview-card{
+      width:200px;padding:20px;border-radius:20px;
+      background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04));
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:0 0 0 0.5px rgba(255,255,255,0.08) inset,0 20px 50px rgba(0,0,0,0.4);
+      position:relative;overflow:hidden;
+      animation:float 4s ease-in-out infinite;
+    }
+    .preview-card::before{
+      content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.7),transparent);
+    }
+    .preview-card:nth-child(2){animation-delay:1s;}
+    .preview-card:nth-child(3){animation-delay:2s;}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-12px) rotate(1deg);}}
+    .pc-icon{font-size:24px;margin-bottom:10px;display:block;}
+    .pc-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,0.35);}
+    .pc-val{
+      font-family:'Syne',sans-serif;font-size:24px;font-weight:800;
+      background:var(--g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+
+    /* Features */
+    .features{padding:80px 24px 100px;position:relative;z-index:1;max-width:1100px;margin:0 auto;}
+    .section-eyebrow{
+      text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.1em;
+      color:rgba(255,255,255,0.35);margin-bottom:14px;
+    }
+    .section-title{
+      font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,44px);font-weight:800;
+      text-align:center;margin-bottom:56px;
+      background:linear-gradient(135deg,#e2d9ff,#a5f3fc);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+    .feat-card{
+      padding:28px;border-radius:22px;position:relative;overflow:hidden;
+      background:linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,0.10);
+      box-shadow:0 0 0 0.5px rgba(255,255,255,0.07) inset,0 20px 40px rgba(0,0,0,0.3);
+      transition:transform .3s,box-shadow .3s;
+    }
+    .feat-card::before{
+      content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
+    }
+    .feat-card:hover{transform:translateY(-4px);box-shadow:0 0 0 0.5px rgba(255,255,255,0.12) inset,0 30px 60px rgba(0,0,0,0.4);}
+    .feat-icon{font-size:32px;margin-bottom:14px;display:block;}
+    .feat-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#f0f0ff;margin-bottom:8px;}
+    .feat-desc{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.65;font-weight:300;}
+
+    /* Footer CTA */
+    .footer-cta{
+      text-align:center;padding:60px 24px 100px;position:relative;z-index:1;
+    }
+    .footer-cta h2{
+      font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,44px);font-weight:800;
+      margin-bottom:16px;
+      background:linear-gradient(135deg,#e2d9ff,#a5f3fc,#fce7f3);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .footer-cta p{font-size:16px;color:rgba(255,255,255,0.4);margin-bottom:32px;font-weight:300;}
+
+    /* Page transition */
+    body{animation:pageIn .5s ease both;}
+    body.fade-out{animation:pageOut .4s ease forwards;}
+    @keyframes pageIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+    @keyframes pageOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-10px);}}
+
+    @media(max-width:640px){
+      nav{padding:14px 20px;}
+      .preview-float .preview-card:nth-child(3){display:none;}
+    }
+  </style>
 </head>
 <body>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
 
-  <div id="storage-warning" class="storage-warning hidden" role="alert">
-    ⚠️ Storage unavailable – your data will not be saved this session.
+  <nav>
+    <span class="nav-logo">Nijam Paaku</span>
+    <a href="tracker.html" class="nav-btn" id="nav-start">Open App</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">✨ Your Daily Life, Beautifully Tracked</div>
+    <h1>Track Every<br/>Day. Grow<br/>Every Day.</h1>
+    <p class="hero-sub">One app for water, sleep, habits, mood, tasks, calories and more — with a beautiful interface that makes daily tracking feel effortless.</p>
+    <div class="cta-group">
+      <a href="tracker.html" class="cta-primary" id="cta-main">Start Tracking Today →</a>
+      <a href="#features" class="cta-secondary">See Features</a>
+    </div>
+
+    <div class="preview-float">
+      <div class="preview-card">
+        <span class="pc-icon">💧</span>
+        <span class="pc-label">Water Today</span>
+        <span class="pc-val" style="--g:linear-gradient(135deg,#7dd3fc,#22d3ee)">1.4L</span>
+      </div>
+      <div class="preview-card">
+        <span class="pc-icon">🔥</span>
+        <span class="pc-label">Day Streak</span>
+        <span class="pc-val" style="--g:linear-gradient(135deg,#fbbf24,#f97316)">14</span>
+      </div>
+      <div class="preview-card">
+        <span class="pc-icon">📊</span>
+        <span class="pc-label">Day Score</span>
+        <span class="pc-val" style="--g:linear-gradient(135deg,#34d399,#22d3ee)">82</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <p class="section-eyebrow">Everything you need</p>
+    <h2 class="section-title">A tracker built for real daily life</h2>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="feat-icon">📊</span>
+        <div class="feat-title">Live Dashboard</div>
+        <p class="feat-desc">A single glanceable score (0–100) tells you how your day is going, updated in real time as you log.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">💧</span>
+        <div class="feat-title">Water & Nutrition</div>
+        <p class="feat-desc">Track hydration in ml with quick-add buttons. Log meals by name and calories. Visual progress bars update instantly.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🔥</span>
+        <div class="feat-title">Habit Streaks</div>
+        <p class="feat-desc">Build streaks across 5 default habits — or create your own. A 7-day calendar grid shows your pattern at a glance.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">😴</span>
+        <div class="feat-title">Sleep Tracking</div>
+        <p class="feat-desc">Log sleep and wake times. Duration is calculated automatically, including overnight sleep that crosses midnight.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📈</span>
+        <div class="feat-title">Weekly Analytics</div>
+        <p class="feat-desc">Bar charts for tasks, water, and sleep over 7 days, plus habit streak counts for each tracked habit.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">⬇️</span>
+        <div class="feat-title">Your Data, Your Device</div>
+        <p class="feat-desc">Everything stored locally — no account needed. Export your full data as JSON any time you want.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-cta">
+    <h2>Ready to start?</h2>
+    <p>No sign-up. No cloud. Just open and go.</p>
+    <a href="tracker.html" class="cta-primary" id="cta-bottom">Open Nijam Paaku →</a>
   </div>
 
-  <header class="app-header">
-    <h1 class="app-title">Nijam Paaku</h1>
-    <button id="dark-mode-toggle" class="btn btn-icon" aria-label="Toggle dark mode">🌙</button>
-  </header>
-
-  <main class="app-main">
-
-    <div class="dashboard-main card">
-      <div class="section-header">
-        <h2>Dashboard</h2>
-        <p class="section-sub">Your daily overview</p>
-      </div>
-      <div id="dashboard" class="dashboard-grid"></div>
-    </div>
-
-    <div class="section-group">
-
-      <section id="tasks" class="section card">
-        <h2>Tasks</h2>
-        <form class="task-form">
-          <input class="task-input" type="text" placeholder="Add a new task…" autocomplete="off" />
-          <button type="submit">Add</button>
-          <p class="task-error"></p>
-        </form>
-      </section>
-
-      <section id="water" class="section card"><h2>Water Intake</h2></section>
-      <section id="calories" class="section card"><h2>Calorie Tracker</h2></section>
-      <section id="sleep" class="section card"><h2>Sleep Tracker</h2></section>
-      <section id="screenTime" class="section card"><h2>Screen Time</h2></section>
-      <section id="mood" class="section card"><h2>Mood</h2></section>
-      <section id="habits" class="section card"><h2>Habits</h2></section>
-      <section id="timeline" class="section card"><h2>Activity Timeline</h2></section>
-      <section id="journal" class="section card"><h2>Daily Journal</h2></section>
-
-      <section id="analytics" class="section card">
-        <h2>Weekly Analytics</h2>
-        <div class="charts-grid">
-          <div class="chart-tasks"></div>
-          <div class="chart-water"></div>
-          <div class="chart-sleep"></div>
-        </div>
-        <div class="analytics-streaks"></div>
-      </section>
-
-      <section id="achievements" class="section card"><h2>Achievements</h2></section>
-      <section id="reminders" class="section card"><h2>Reminders</h2></section>
-
-    </div>
-  </main>
-
-  <script type="module" src="app.js"></script>
+  <script>
+    // Smooth page-exit transition for all CTA links
+    document.querySelectorAll('a[href="tracker.html"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.body.classList.add('fade-out');
+        setTimeout(() => { window.location.href = 'tracker.html'; }, 380);
+      });
+    });
+  </script>
 </body>
 </html>

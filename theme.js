@@ -2,34 +2,38 @@ import * as storage from './storage.js';
 
 const STORAGE_KEY = 'theme';
 
-/**
- * Initialise theme: apply stored preference and wire up the toggle button.
- */
 export function init() {
-  const stored = storage.get(STORAGE_KEY, 'light');
+  // Apply stored theme on load (default = dark for our liquid glass design)
+  const stored = storage.get(STORAGE_KEY, 'dark');
   if (stored === 'dark') {
     document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
   }
 
-  const btn = document.getElementById('dark-mode-toggle');
-  if (btn) {
+  // Wire BOTH toggle buttons (desktop sidebar + mobile header)
+  document.querySelectorAll('.theme-toggle, #dark-mode-toggle, #dark-mode-toggle-desktop').forEach(btn => {
     btn.addEventListener('click', _toggle);
-  }
+  });
+
+  _updateIcons();
 }
 
-/**
- * Toggle dark/light theme, persist to storage.
- */
 function _toggle() {
   const html = document.documentElement;
   const isDark = html.classList.toggle('dark');
   storage.set(STORAGE_KEY, isDark ? 'dark' : 'light');
+  _updateIcons();
 }
 
-/**
- * Returns the current theme string based on the <html> class.
- * @returns {'light'|'dark'}
- */
+function _updateIcons() {
+  const isDark = document.documentElement.classList.contains('dark');
+  document.querySelectorAll('.theme-toggle, #dark-mode-toggle, #dark-mode-toggle-desktop').forEach(btn => {
+    btn.textContent = isDark ? '☀️' : '🌙';
+    btn.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+  });
+}
+
 export function getTheme() {
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }

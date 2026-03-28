@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Nijam Paaku – Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+  <!-- ── Onboarding Modal ─────────────────────────────────────────── -->
+  <div id="onboarding-overlay" class="onboarding-overlay hidden">
+    <div class="onboarding-modal lg-card">
+      <div class="onboarding-emoji">👋</div>
+      <h2 class="onboarding-title">Welcome to Nijam Paaku</h2>
+      <p class="onboarding-sub">Your personal daily tracker. Let's set up your name so we can greet you properly.</p>
+      <label class="np-label">What should we call you?</label>
+      <input id="onboarding-name" class="np-input" type="text" placeholder="Your name…" maxlength="30" autocomplete="off"/>
+      <button id="onboarding-btn" class="np-btn-primary w-100 mt-2">Let's go →</button>
+    </div>
+  </div>
+
+  <!-- ── Storage Warning ──────────────────────────────────────────── -->
+  <div id="storage-warning" class="np-storage-warning hidden" role="alert">
+    ⚠️ Storage unavailable – your data will not be saved this session.
+  </div>
+
+  <!-- ── Toast Container ─────────────────────────────────────────── -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- ── Mobile Header (visible < lg) ──────────────────────────── -->
+  <header class="mobile-header d-lg-none">
+    <button class="mobile-menu-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="mobile-logo">Nijam Paaku</span>
+    <button id="dark-mode-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+  </header>
+
+  <!-- ── Mobile Sidebar (Bootstrap Offcanvas) ─────────────────── -->
+  <div class="offcanvas offcanvas-start np-offcanvas" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-header">
+      <span class="sidebar-logo">Nijam Paaku</span>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <div class="sidebar-date-block" id="mobile-date"></div>
+      <nav class="sidebar-nav-list" id="mobile-nav">
+        <a href="#section-dashboard"  class="snav-item" data-bs-dismiss="offcanvas"><span>📊</span>Dashboard</a>
+        <a href="#section-tasks"      class="snav-item" data-bs-dismiss="offcanvas"><span>✅</span>Tasks</a>
+        <a href="#section-water"      class="snav-item" data-bs-dismiss="offcanvas"><span>💧</span>Water</a>
+        <a href="#section-calories"   class="snav-item" data-bs-dismiss="offcanvas"><span>🍽️</span>Calories</a>
+        <a href="#section-sleep"      class="snav-item" data-bs-dismiss="offcanvas"><span>😴</span>Sleep</a>
+        <a href="#section-screentime" class="snav-item" data-bs-dismiss="offcanvas"><span>📱</span>Screen Time</a>
+        <a href="#section-mood"       class="snav-item" data-bs-dismiss="offcanvas"><span>😊</span>Mood</a>
+        <a href="#section-habits"     class="snav-item" data-bs-dismiss="offcanvas"><span>🔥</span>Habits</a>
+        <a href="#section-timeline"   class="snav-item" data-bs-dismiss="offcanvas"><span>📅</span>Timeline</a>
+        <a href="#section-journal"    class="snav-item" data-bs-dismiss="offcanvas"><span>📓</span>Journal</a>
+        <a href="#section-analytics"  class="snav-item" data-bs-dismiss="offcanvas"><span>📈</span>Analytics</a>
+        <a href="#section-achievements" class="snav-item" data-bs-dismiss="offcanvas"><span>🏆</span>Achievements</a>
+        <a href="#section-reminders"  class="snav-item" data-bs-dismiss="offcanvas"><span>⏰</span>Reminders</a>
+      </nav>
+      <div class="sidebar-actions">
+        <button id="export-btn-mobile"     class="snav-action-btn">⬇️ Export Data</button>
+        <button id="clear-data-btn-mobile" class="snav-action-btn danger">🗑️ Clear All Data</button>
+        <a href="index.html" class="snav-action-btn">🏠 Home</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── App Shell ─────────────────────────────────────────────── -->
+  <div class="app-shell">
+
+    <!-- Desktop Sidebar (visible ≥ lg) -->
+    <aside class="sidebar d-none d-lg-flex">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <span class="sidebar-logo">Nijam Paaku</span>
+          <button id="dark-mode-toggle-desktop" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        </div>
+        <div class="sidebar-date-block" id="desktop-date"></div>
+      </div>
+
+      <nav class="sidebar-nav-list flex-grow-1" id="desktop-nav">
+        <a href="#section-dashboard"    class="snav-item" data-section="dashboard">    <span>📊</span>Dashboard</a>
+        <a href="#section-tasks"        class="snav-item" data-section="tasks">        <span>✅</span>Tasks</a>
+        <a href="#section-water"        class="snav-item" data-section="water">        <span>💧</span>Water</a>
+        <a href="#section-calories"     class="snav-item" data-section="calories">     <span>🍽️</span>Calories</a>
+        <a href="#section-sleep"        class="snav-item" data-section="sleep">        <span>😴</span>Sleep</a>
+        <a href="#section-screentime"   class="snav-item" data-section="screentime">   <span>📱</span>Screen Time</a>
+        <a href="#section-mood"         class="snav-item" data-section="mood">         <span>😊</span>Mood</a>
+        <a href="#section-habits"       class="snav-item" data-section="habits">       <span>🔥</span>Habits</a>
+        <a href="#section-timeline"     class="snav-item" data-section="timeline">     <span>📅</span>Timeline</a>
+        <a href="#section-journal"      class="snav-item" data-section="journal">      <span>📓</span>Journal</a>
+        <a href="#section-analytics"    class="snav-item" data-section="analytics">    <span>📈</span>Analytics</a>
+        <a href="#section-achievements" class="snav-item" data-section="achievements"> <span>🏆</span>Achievements</a>
+        <a href="#section-reminders"    class="snav-item" data-section="reminders">    <span>⏰</span>Reminders</a>
+      </nav>
+
+      <div class="sidebar-actions">
+        <button id="export-btn"     class="snav-action-btn">⬇️ Export Data</button>
+        <button id="clear-data-btn" class="snav-action-btn danger">🗑️ Clear All Data</button>
+        <a href="index.html" class="snav-action-btn">🏠 Home</a>
+      </div>
+    </aside>
+
+    <!-- ── Main Scrollable Content ──────────────────────────── -->
+    <main class="main-content" id="main-content">
+
+      <!-- DASHBOARD -->
+      <section class="tracker-section" id="section-dashboard">
+        <div class="lg-card dashboard-hero-card">
+          <div id="dashboard-greeting" class="dash-greeting"></div>
+          <div id="dashboard" class="dashboard-grid"></div>
+        </div>
+      </section>
+
+      <!-- TASKS -->
+      <section class="tracker-section" id="section-tasks">
+        <div id="tasks" class="lg-card section-card">
+          <h2>Tasks</h2>
+          <form class="task-form">
+            <input class="task-input np-input" type="text" placeholder="Add a new task…" autocomplete="off"/>
+            <button type="submit" class="np-btn-primary">Add</button>
+            <p class="task-error"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- WATER -->
+      <section class="tracker-section" id="section-water">
+        <div id="water" class="lg-card section-card"><h2>Water Intake</h2></div>
+      </section>
+
+      <!-- CALORIES -->
+      <section class="tracker-section" id="section-calories">
+        <div id="calories" class="lg-card section-card"><h2>Calorie Tracker</h2></div>
+      </section>
+
+      <!-- SLEEP -->
+      <section class="tracker-section" id="section-sleep">
+        <div id="sleep" class="lg-card section-card"><h2>Sleep Tracker</h2></div>
+      </section>
+
+      <!-- SCREEN TIME -->
+      <section class="tracker-section" id="section-screentime">
+        <div id="screenTime" class="lg-card section-card"><h2>Screen Time</h2></div>
+      </section>
+
+      <!-- MOOD -->
+      <section class="tracker-section" id="section-mood">
+        <div id="mood" class="lg-card section-card"><h2>Mood</h2></div>
+      </section>
+
+      <!-- HABITS -->
+      <section class="tracker-section" id="section-habits">
+        <div id="habits" class="lg-card section-card"><h2>Habits</h2></div>
+      </section>
+
+      <!-- TIMELINE -->
+      <section class="tracker-section" id="section-timeline">
+        <div id="timeline" class="lg-card section-card"><h2>Activity Timeline</h2></div>
+      </section>
+
+      <!-- JOURNAL -->
+      <section class="tracker-section" id="section-journal">
+        <div id="journal" class="lg-card section-card"><h2>Daily Journal</h2></div>
+      </section>
+
+      <!-- ANALYTICS — pre-create chart containers -->
+      <section class="tracker-section" id="section-analytics">
+        <div id="analytics" class="lg-card section-card">
+          <h2>Weekly Analytics</h2>
+          <div class="charts-grid">
+            <div class="chart-tasks"></div>
+            <div class="chart-water"></div>
+            <div class="chart-sleep"></div>
+          </div>
+          <div class="analytics-streaks"></div>
+        </div>
+      </section>
+
+      <!-- ACHIEVEMENTS -->
+      <section class="tracker-section" id="section-achievements">
+        <div id="achievements" class="lg-card section-card"><h2>Achievements</h2></div>
+      </section>
+
+      <!-- REMINDERS -->
+      <section class="tracker-section" id="section-reminders">
+        <div id="reminders" class="lg-card section-card"><h2>Reminders</h2></div>
+      </section>
+
+      <div style="height:80px"></div>
+    </main>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Sidebar active-link on scroll (Intersection Observer) -->
+  <script>
+    const sections = document.querySelectorAll('.tracker-section[id]');
+    const navItems = document.querySelectorAll('.snav-item[data-section]');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id.replace('section-', '');
+          navItems.forEach(a => {
+            a.classList.toggle('active', a.dataset.section === id);
+          });
+        }
+      });
+    }, { threshold: 0.25 });
+    sections.forEach(s => obs.observe(s));
+
+    // Sync both dark mode toggles
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.theme-toggle').forEach(b => {
+          b.textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+        });
+      });
+    });
+
+    // Update date/time sidebar block
+    function updateDate() {
+      const now = new Date();
+      const opts = { weekday:'long', month:'long', day:'numeric' };
+      const dateStr = now.toLocaleDateString('en-US', opts);
+      const timeStr = now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+      const html = `<div class="sd-time">${timeStr}</div><div class="sd-date">${dateStr}</div>`;
+      document.getElementById('desktop-date').innerHTML = html;
+      document.getElementById('mobile-date').innerHTML = html;
+    }
+    updateDate();
+    setInterval(updateDate, 30000);
+
+    // Smooth scroll for sidebar links
+    document.querySelectorAll('.snav-item[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+  <!-- App modules (ES modules, must come after Bootstrap) -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
